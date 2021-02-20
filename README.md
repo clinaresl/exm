@@ -4,6 +4,18 @@
 end, it provides a script `exm.py`.
 
 
+# Requirements #
+
+``exm`` requires the following Python packages:
+
+* [icalendar](https://pypi.org/project/icalendar/) >= 4.0.7
+* [pyexcel](https://pypi.org/project/pyexcel/) >= 0.6.6
+  and make sure to install the [pyexcel-xlsx](https://pypi.org/project/pyexcel-xlsx/) >= 0.6.0 plugin
+* [python-constraint](https://pypi.org/project/python-constraint/) >= 1.4.0
+* [pytz](https://pypi.org/project/pytz/) >= 2020.1
+* [xlsxwriter](https://pypi.org/project/XlsxWriter/) >= 1.3.7
+
+
 # Installation #
 
 Download the software cloning the git repository with the following command:
