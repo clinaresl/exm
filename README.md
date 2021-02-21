@@ -179,7 +179,6 @@ case there is a reason to explicitly use it, it is advised to leave a heading
 blank space, or the spreadsheet might confuse the unit constraint with a
 *formula*.
 
-<a name="binary-constraints"/>
 ### Binary constraints ###
 
 Binary constraints are much alike unit constraints. The same operators are
@@ -259,8 +258,72 @@ and Optimization* must be scheduled on a date and time that is compatible, not
 only with other exams of GII, but also with the exams of GMAC and GII-ADE.
 
 With this purpose in mind, `exm` allows referencing any record in any sheet (or,
-alternatively in any grade) when setting up a [binary
-constraint](https://github.com/clinaresl/exm/binary-constraint).
+alternatively in any grade) when setting up a binary constraint. This is done by
+prefixing a cell name (such as `B13`) with the name of the sheet, e.g.,
+`$GMAC.B13`. Note that in this case the dollar sign `$` has to be used.
+
+The following table shows the contents of the sheet `GMAC` for scheduling the
+exams of the first course:
+
+| Asignatura | Curso | Cuatrimestre |Fecha | Hora |
+|:----------:|:-----:|:------------:|:----:|:----:|
+|Cálculo diferencial | 1 | 1 | > B13, <B5 | |
+|Fundamentos de Álgebra | 1 |1 | | 15:30 |
+|Programación | 1 | 1 | $GII.B6 | |
+| Álgebra Lineal | 1 | 1 | | != B10 |
+| Técnicas de expresión oral y escrita | 1 | 1 | |
+|Habilidades: Humanidades I | 1 | 1 | |
+| Cálculo Integral | 1 | 2 | < B4, >= 2021/05/22 | |
+| Cálculo Vectorial | 1 | 2 | | <= B12 |
+| Geometría Lineal | 1 | 2 | | > B5 |
+| Técnicas de Programación | 1 | 2 | | |
+| Matemática Discreta | 1 | 2 | $GII.B14 | |
+
+Note that two different binary constraints force *Programación* and *Matemática
+Discreta* to be scheduled on precisely the same dates than those subjects
+recorded in cells `$GII.B6` and `$GII.B14` respectively ---which are,
+incidentally, the same subjects lectured in GII. The specification of GII is not
+shown but can be looked up in the file `data/example-3.xlsx`. 
+
+Now, when invoking `exm` over this spreadsheet for scheduling the subjects of
+GMAC:
+
+```Shell
+$ exm --master data/example-3.xlsx --grade GMAC
+```
+
+an output spreadsheet is generated with a full schedule **only for the subjects
+of GII**. This is, by default, `exm` does not consider the scheduling
+constraints of subjects in other grades unless told otherwise. This is
+accomplished by providing the flag `--load-indirects`:
+
+```Shell
+$ exm --master data/example-3.xlsx --grade GMAC --load-indirects
+```
+
+Now, the output spreadsheet generates a full schedule for all subjects of GMAC,
+making sure that all constraints are satisfied. In addition, it makes sure that
+cross-referencing binary constraints are satisfied as well. The resulting
+schedule for GMAC looks much the same than the one generated in the previous
+example (only a few time selections change) but, in addition, the output
+spreadsheet also contains a partial schedule of GII in a dedicated sheet, with
+those *indirect* records processed when computing the schedule of GMAC:
+
+| Asignatura | Curso | Cuatrimestre |Fecha | Hora |
+|:----------:|:-----:|:------------:|:----:|:----:|
+| Programación | 1 | 1 | 2021-05-25 | 18:30:00 |
+| Matemática Discreta | 1 | 2 | 2021-05-26 | 18:30:00 |
+
+Of course, using `--load-indirects` serves only to make sure that *indirect*
+records are also scheduled. To make sure that both grades are simultaneously
+scheduled, use:
+
+```Shell
+$ exm --master data/example-3.xlsx --load-indirects
+```
+
+which fully schedules all subjects of both grades making sure that
+cross-referencing binary constraints are satisfied by all means. 
 
 # License #
 
