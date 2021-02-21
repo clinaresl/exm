@@ -150,7 +150,7 @@ completed.
 *binary* constraints affecting the selection of the date and/or the time of an
 exam.
 
-This contraints have to be given in the columns `Fecha` and `Hora` of the input
+These contraints have to be given in the columns `Fecha` and `Hora` of the input
 spreadsheet. An arbitrary number of them can be given in a comma-separated list
 of constraints ---see examples below.
 
@@ -165,6 +165,25 @@ forbids one specific date; `< 18:30` serves to pick up any time before 6:30 PM,
 whereas `>= 18:30` necessarily fixes the time of an exam given the timeslots
 defined in the previous example.
 
+To avoid misleading behavious while operating with the input spreadsheet, the
+operator `=` can be always skipped, e.g., `8:30` is interpreted as `= 8:30`. In
+case there is a reason to explicitly use it, it is advised to leave a heading
+blank space, or the spreadsheet might confuse the unit constraint with a
+/formula/.
+
+### Binary constraints ###
+
+Binary constraints are much alike unit constraints. The same operators are
+available for defining them and `=` is also assumed by default. The difference
+is that instead of providing a constant date or time, they accept a reference to
+another record.
+
+Records are identified by the cell where the name of a subject is given. Thus,
+if one subject (say /Cálculo diferencial/) is given the binary constraint `>
+B13` in the date column, then any feasible solution should allocate this exam a
+date after the exam selected for the record shown in cell B13. Likewise, if `!=
+B10` is given in the time column, then the time chosen for that specific exam
+must be different than the time selected for the subject shown in cell B10.
 
 # License #
 
