@@ -3,7 +3,7 @@
 ``exm`` is a Python package that automates the scheduling of UC3M exams. To this
 end, it provides a script with the same name, `exm`.
 
-`exm` enables the arbitrary combination of both /unit/ and /binary/ date and
+`exm` enables the arbitrary combination of both *unit* and *binary* date and
 time constraints between subjects of the same grade or across different grades.
 It also allows the definition of different *setup* times required for the
 preparation of any exam. The solutions obtained are not only compliant with
@@ -262,8 +262,8 @@ alternatively in any grade) when setting up a binary constraint. This is done by
 prefixing a cell name (such as `B13`) with the name of the sheet, e.g.,
 `$GMAC.B13`. Note that in this case the dollar sign `$` has to be used.
 
-The following table shows the contents of the sheet `GMAC` for scheduling the
-exams of the first course:
+The following table extends the contents of the sheet `GMAC` for scheduling the
+exams of the first course using this time cross-referencing binary constraints:
 
 | Asignatura | Curso | Cuatrimestre |Fecha | Hora |
 |:----------:|:-----:|:------------:|:----:|:----:|
@@ -279,11 +279,12 @@ exams of the first course:
 | Técnicas de Programación | 1 | 2 | | |
 | Matemática Discreta | 1 | 2 | $GII.B14 | |
 
-Note that two different binary constraints force *Programación* and *Matemática
-Discreta* to be scheduled on precisely the same dates than those subjects
-recorded in cells `$GII.B6` and `$GII.B14` respectively ---which are,
-incidentally, the same subjects lectured in GII. The specification of GII is not
-shown but can be looked up in the file `data/example-3.xlsx`. 
+Note that two different cross-referencing binary constraints force
+*Programación* and *Matemática Discreta* to be scheduled on precisely the same
+dates than those subjects recorded in cells `$GII.B6` and `$GII.B14`
+respectively ---which are, incidentally, the same subjects lectured in GII. The
+specification of GII is not shown but can be looked up in the file
+`data/example-3.xlsx`.
 
 Now, when invoking `exm` over this spreadsheet for scheduling the subjects of
 GMAC:
@@ -293,9 +294,9 @@ $ exm --master data/example-3.xlsx --grade GMAC
 ```
 
 an output spreadsheet is generated with a full schedule **only for the subjects
-of GII**. This is, by default, `exm` does not consider the scheduling
-constraints of subjects in other grades unless told otherwise. This is
-accomplished by providing the flag `--load-indirects`:
+of GMAC**. This is, by default, `exm` does not consider the scheduling
+constraints of subjects in other grades (known as *indirect* records) unless
+told otherwise. This is accomplished by providing the flag `--load-indirects`:
 
 ```Shell
 $ exm --master data/example-3.xlsx --grade GMAC --load-indirects
@@ -304,10 +305,10 @@ $ exm --master data/example-3.xlsx --grade GMAC --load-indirects
 Now, the output spreadsheet generates a full schedule for all subjects of GMAC,
 making sure that all constraints are satisfied. In addition, it makes sure that
 cross-referencing binary constraints are satisfied as well. The resulting
-schedule for GMAC looks much the same than the one generated in the previous
-example (only a few time selections change) but, in addition, the output
-spreadsheet also contains a partial schedule of GII in a dedicated sheet, with
-those *indirect* records processed when computing the schedule of GMAC:
+schedule for GMAC looks much the same than the previous one but, in addition,
+the output spreadsheet also contains a partial schedule of GII in a dedicated
+sheet, with those *indirect* records processed when computing the schedule of
+GMAC:
 
 | Asignatura | Curso | Cuatrimestre |Fecha | Hora |
 |:----------:|:-----:|:------------:|:----:|:----:|
@@ -323,14 +324,79 @@ $ exm --master data/example-3.xlsx --load-indirects
 ```
 
 which fully schedules all subjects of both grades making sure that
-cross-referencing binary constraints are satisfied by all means. 
+cross-referencing binary constraints are satisfied by all means, as much as
+constraints among records of the same grade.
+
+
+## Configuring *setup* times ##
+
+As part of the process of scheduling the exams period of any grade, the UC3M
+listens to those requirements posted by the representatives of students. A
+common requirement is to allow more time for those exams that are known to be
+harder than others. While the current UC3M regulations impose a period of 24
+hours between two consecutive exams of the same course, it might be desirable to
+modify this limit. In the following, the minimum time required before an exam
+takes places with regard to any other exam of the same grade and course is known
+as its *setup* time.
+
+Setup times can be additionally specified for any subject just by adding a new
+column to a sheet. This column must be named `Setup`. If either the column is
+not present, or is present but a cell is found empty, then the setup time by
+default is applied, 24 hours.
+
+The following Table shows the contents of GMAC with two different setup times
+for two subjects:
+
+| Asignatura | Curso | Cuatrimestre |Fecha | Hora | Setup |
+|:----------:|:-----:|:------------:|:----:|:----:|:-----:|
+|Cálculo diferencial | 1 | 1 | > B13, <B5 | | |
+|Fundamentos de Álgebra | 1 |1 | | 15:30 | |
+|Programación | 1 | 1 | $GII.B6 | | |
+| Álgebra Lineal | 1 | 1 | | != B10 | 48 |
+| Técnicas de expresión oral y escrita | 1 | 1 | | |
+|Habilidades: Humanidades I | 1 | 1 | | |
+| Cálculo Integral | 1 | 2 | < B4, >= 2021/05/22 | | |
+| Cálculo Vectorial | 1 | 2 | | <= B12 | |
+| Geometría Lineal | 1 | 2 | | > B5 | |
+| Técnicas de Programación | 1 | 2 | | | |
+| Matemática Discreta | 1 | 2 | $GII.B14 | | 72 |
+
+It is also possible to specify any setup time, even below 24 hours, but this
+seems to be of limited applicability. The full specifications of this example
+can be found in `data/example-4.xlsx`, and the scheduling obtained is shown
+next:
+
+| Asignatura | Curso | Cuatrimestre |Fecha | Hora |
+|:----------:|:-----:|:------------:|:----:|:----:|
+| Habilidades: Humanidades I | 1 | 1 | 2021-05-22 | 12:30:00 |
+| Programación | 1 | 1 | 2021-05-24 | 12:30:00 |
+| Técnicas de expresión oral y escrita | 1 | 1 | 2021-05-25 | 12:30:00 |
+| Álgebra Lineal | 1 | 1 | 2021-05-29 | 12:30:00 |
+| Cálculo diferencial | 1 | 1 | 2021-06-03 | 15:30:00 |
+| Fundamentos de Álgebra | 1 | 1 | 2021-06-04 | 15:30:00 |
+| Matemática Discreta | 1 | 2 | 2021-05-21 | 12:30:00 |
+| Técnicas de Programación | 1 | 2 | 2021-05-26 | 12:30:00 |
+| Cálculo Vectorial | 1 | 2 | 2021-05-27 | 12:30:00 |
+| Cálculo Integral | 1 | 2 | 2021-05-31 | 18:30:00 |
+| Geometría Lineal | 1 | 2 | 2021-06-01 | 18:30:00 |
+
+As it can be seen, *Álgebra Lineal* is scheduled for 2021/05/29 at 12:30 and no
+exam takes place in the preceding 48 hours. Likewise, no exam takes place three
+days before 2021/05/21 (as it is scheduled to be first in the exams period),
+therefore satisficing its setup time of 72 hours too.
+
+The file `data/example-4.xlsx` contains also the same cross-referencing
+binary-constraints with GII discussed in the previous example. Bear in mind that
+*setup* times do not correlate among different grades and, indeed, different
+*setup* times can be defined for records in different grades (or sheets) even if
+there are cross-referencing binary constraints among them.
+
 
 # License #
 
-exm is free software: you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation, either version 3 of the License, or (at your
-option) any later version.
+exm is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation,
+either version 3 of the License, or (at your option) any later version.
 
 exm is distributed in the hope that it will be useful, but WITHOUT
 ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
