@@ -55,9 +55,9 @@ the contents of this sheet in the file `data/example-1.xlsx`:
 |03/06/21 | 08:30 AM | 12:30 PM | 03:30 PM | 06:30 PM |
 |04/06/21 | 08:30 AM | 12:30 PM | 03:30 PM | 06:30 PM |
 
-Note the date is given in spanish format just because the locale of the input
-spreadsheet is defined that way, but other formats are also allowed. The headers
-must be named precisely as shown in the previous Table. 
+The headers must be named precisely as shown in the previous Table. Note the
+date is given in spanish format just because the locale of the input spreadsheet
+is defined that way, but other formats are also allowed.
 
 Next, the input spreadsheet must have a sheet for each grade. For the purposes
 of ilustration, the following Table shows the contents of the file
@@ -68,15 +68,57 @@ Mathematics and Computing** (abbreviated as *GMAC* in spanish):
 |:----------:|:-----:|:------------:|:----:|:----:|
 |Cálculo diferencial | 1 | 1 |  | |
 |Fundamentos de Álgebra | 1 |1 | | |
-|Programación | 1 | 1 | $GII.B6 | $GII.B6 |
-| Álgebra Lineal | 1 | 1 | $GII.B7 | $GII.B7 |
+|Programación | 1 | 1 | | |
+| Álgebra Lineal | 1 | 1 | | |
 | Técnicas de expresión oral y escrita | 1 | 1 | |
 |Habilidades: Humanidades I | 1 | 1 | |
 | Cálculo Integral | 1 | 2 | | |
 | Cálculo Vectorial | 1 | 2 | | |
 | Geometría Lineal | 1 | 2 | | |
 | Técnicas de Programación | 1 | 2 | | |
-| Matemática Discreta | 1 | 2 | $GII.B14 | $GII.B14 |
+| Matemática Discreta | 1 | 2 | | |
+
+Again, headers must be named precisely as in the Table. Note the presence of
+columns `Fecha` (date) and `Hora` (time). These can be used for introducing any
+combination of unit and binary constraints for selecting the date and/or the
+time of each exam. Given the current contents of this input spreadsheet, the
+command:
+
+```Shell
+$ exm --master data/example-1.xlsx
+```
+
+produces a feasible schedule for all the exams found in `data/example-1.xlsx`.
+The input spreadsheet is specified with `--master` and unless another name is
+given for the output spreadsheet, it is named after the input file adding
+`-timetable`. The contents of the output spreadsheet
+`data/example-1-timetable.xlsx` are shown next:
+
+| Asignatura | Curso | Cuatrimestre |Fecha | Hora |
+|:----------:|:-----:|:------------:|:----:|:----:|
+| Habilidades: Humanidades I | 1 | 1 | 2021-05-24 | 12:30:00 |
+| Técnicas de expresión oral y escrita | 1 | 1 | 2021-05-25 | 12:30:00 |
+| Álgebra Lineal | 1 | 1 | 2021-05-26 | 12:30:00 |
+| Programación | 1 | 1 | 2021-05-27 | 12:30:00 |
+| Fundamentos de Álgebra | 1 | 1 | 2021-05-28 | 12:30:00 |
+| Cálculo diferencial | 1 | 1 | 2021-05-29 | 12:30:00 |
+| Matemática Discreta | 1 | 2 | 2021-05-31 | 18:30:00 |
+| Técnicas de Programación | 1 | 2 | 2021-06-01 | 18:30:00 |
+| Geometría Lineal | 1 | 2 | 2021-06-02 | 18:30:00 |
+| Cálculo Vectorial | 1 | 2 | 2021-06-03 | 18:30:00 |
+| Cálculo Integral | 1 | 2 | 2021-06-04 | 18:30:00 |
+
+In the absence of other constraints in the input spreadsheet the only one that
+applies is that according to the UC3M regulations, two consecutive exams of the
+same course should leave a space of at least 24 hours in between. The produced
+schedule is actually compliant with this constraint.
+
+Additionally, it is possible to use `--ical` to specify the name of an icalendar
+file which can then be exported to any utility. The following Figure shows a
+partial view of the result of importing the preceding schedule into Google
+Calendar:
+
+![Google Calendar example-1](https://github.com/clinaresl/exm/figs/example-1.png)
 
 
 # License #
