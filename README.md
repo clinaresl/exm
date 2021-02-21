@@ -111,7 +111,9 @@ after the input file adding `-timetable`. The contents of the output spreadsheet
 In the absence of other constraints in the input spreadsheet the only one that
 applies is that according to the UC3M regulations, two consecutive exams of the
 same course should leave a space of at least 24 hours in between. The produced
-schedule is actually compliant with this constraint.
+schedule is actually compliant with this constraint. For improving analysis of
+the resulting schedule, the output spreadsheet has /autofilters/ for all columns
+but the first one.
 
 Additionally, it is possible to use `--ical` to specify the name of an icalendar
 file which can then be exported to any utility. The following Figure shows a
@@ -119,6 +121,10 @@ partial view of the result of importing the preceding schedule into Google
 Calendar:
 
 ![Google Calendar example-1](https://github.com/clinaresl/exm/blob/main/figs/example-1.png)
+
+As it can be seen, the exams last by default one hour. This is not relevant
+indeed, as the time slots given in the input spreadsheet should be wide enough
+to allocate exams of any duration.
 
 Of course, the input spreadsheet might contain various sheets for scheduling the
 exams of different grades but maybe not all have to be scheduled. `exm` provides
@@ -138,6 +144,26 @@ iCalendar will be generated and written to `GMAC.ics`. Note that it is not
 required to provide the extensions of output filenames as they are automatically
 completed.
 
+## Constraints ##
+
+`exm` provides simple means for specifying any combination of *unit* and
+*binary* constraints affecting the selection of the date and/or the time of an
+exam.
+
+This contraints have to be given in the columns `Fecha` and `Hora` of the input
+spreadsheet. An arbitrary number of them can be given in a comma-separated list
+of constraints ---see examples below.
+
+### Unit constraints ###
+
+A unit constraint binds the value of a field (either the date or time of an
+exam) to a constant value (either a date or a time) with the usage of an
+operator. The available operators are: `=`, `!=`, `<`, `<=`, `>` and `>=` with
+have a self-explanatory meaning. For example: `= 28/05/2021` actually fixes the
+date of one subject (also known as *records*), whereas `!= 28/05/2021` just
+forbids one specific date; `< 18:30` serves to pick up any time before 6:30 PM,
+whereas `>= 18:30` necessarily fixes the time of an exam given the timeslots
+defined in the previous example.
 
 
 # License #
