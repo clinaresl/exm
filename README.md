@@ -1,7 +1,7 @@
 # Introduction #
 
 ``exm`` is a Python package that automates the scheduling of UC3M exams. To this
-end, it provides a script `exm.py`.
+end, it provides a script with the same name, `exm`.
 
 
 # Requirements #
@@ -27,6 +27,56 @@ and execute the following statements:
 
     $ cd exm
     $ pip install .
+
+
+# Usage #
+
+`exm` takes an `.xlsx` spreadsheet as input with information about subjects and
+various constraints for scheduling the exams, and produces another `.xlsx`
+spreadsheet with a full schedule (i.e., date and time) for each exam. 
+
+The input spreadsheet should contain a sheet named `Timeslots` with the
+available date and time slots for making the exams. The following Figure shows
+the contents of this sheet in the file `data/example-1.xlsx`:
+
+| Fecha | Slot #1 | Slot #2 | Slot #3 | Slot #4 |
+|:-----:|:-------:|:-------:|:-------:|:-------:|
+|21/05/21 | 08:30 AM | 12:30 PM | 03:30 PM | 06:30 PM |
+|22/05/21 | 08:30 AM |12:30 PM | | |
+|24/05/21 | 08:30 AM | 12:30 PM | 03:30 PM | 06:30 PM |
+|25/05/21 | 08:30 AM | 12:30 PM | 03:30 PM | 06:30 PM |
+|26/05/21 | 08:30 AM | 12:30 PM | 03:30 PM | 06:30 PM |
+|27/05/21 | 08:30 AM | 12:30 PM | 03:30 PM | 06:30 PM |
+|28/05/21 | 08:30 AM | 12:30 PM | 03:30 PM | 06:30 PM |
+|29/05/21 | 08:30 AM | 12:30 PM | | |
+|31/05/21 | 08:30 AM | 12:30 PM | 03:30 PM | 06:30 PM |
+|01/06/21 | 08:30 AM | 12:30 PM | 03:30 PM | 06:30 PM |
+|02/06/21 | 08:30 AM | 12:30 PM | 03:30 PM | 06:30 PM |
+|03/06/21 | 08:30 AM | 12:30 PM | 03:30 PM | 06:30 PM |
+|04/06/21 | 08:30 AM | 12:30 PM | 03:30 PM | 06:30 PM |
+
+Note the date is given in spanish format just because the locale of the input
+spreadsheet is defined that way, but other formats are also allowed. The headers
+must be named precisely as shown in the previous Table. 
+
+Next, the input spreadsheet must have a sheet for each grade. For the purposes
+of ilustration, the following Table shows the contents of the file
+`data/example-1.xlsx` for scheduling the exams of the first course of **Applied
+Mathematics and Computing** (abbreviated as *GMAC* in spanish):
+
+| Asignatura | Curso | Cuatrimestre |Fecha | Hora |
+|:----------:|:-----:|:------------:|:----:|:----:|
+|Cálculo diferencial | 1 | 1 |  | |
+|Fundamentos de Álgebra | 1 |1 | | |
+|Programación | 1 | 1 | $GII.B6 | $GII.B6 |
+| Álgebra Lineal | 1 | 1 | $GII.B7 | $GII.B7 |
+| Técnicas de expresión oral y escrita | 1 | 1 | |
+|Habilidades: Humanidades I | 1 | 1 | |
+| Cálculo Integral | 1 | 2 | | |
+| Cálculo Vectorial | 1 | 2 | | |
+| Geometría Lineal | 1 | 2 | | |
+| Técnicas de Programación | 1 | 2 | | |
+| Matemática Discreta | 1 | 2 | $GII.B14 | $GII.B14 |
 
 
 # License #
