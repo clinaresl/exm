@@ -90,8 +90,8 @@ $ exm --master data/example-1.xlsx
 
 produces a feasible schedule for all the exams found in `data/example-1.xlsx`.
 The input spreadsheet is specified with `--master` and unless another name is
-given for the output spreadsheet, it is named after the input file adding
-`-timetable`. The contents of the output spreadsheet
+given for the output spreadsheet with the directive `--output`, it is named
+after the input file adding `-timetable`. The contents of the output spreadsheet
 `data/example-1-timetable.xlsx` are shown next:
 
 | Asignatura | Curso | Cuatrimestre |Fecha | Hora |
@@ -118,7 +118,26 @@ file which can then be exported to any utility. The following Figure shows a
 partial view of the result of importing the preceding schedule into Google
 Calendar:
 
-![Google Calendar example-1](https://github.com/clinaresl/exm/figs/example-1.png)
+![Google Calendar example-1](https://github.com/clinaresl/exm/blob/main/figs/example-1.png)
+
+Of course, the input spreadsheet might contain various sheets for scheduling the
+exams of different grades but maybe not all have to be scheduled. `exm` provides
+a selection criteria mechanism based on the combination of three flags, namely
+`--grade`, `--course` and `--semester`. In case they are used only one argument
+can be given, and only records simultaneously satisfying all parameters are
+originally accepted. Recaping:
+
+```Shell
+$ exm --master data/example-1.xlsx --grade GMAC --semester 2 --output schedule-GMAC --ical GMAC
+```
+
+will schedule only the exams of the first semester of those subjects shown in
+the sheet `GMAC` (in spite of others being present in the input spreadsheet).
+The result will be recorded in the spreadsheet `schedule-GMAC.xlsx`, and also an
+iCalendar will be generated and written to `GMAC.ics`. Note that it is not
+required to provide the extensions of output filenames as they are automatically
+completed.
+
 
 
 # License #
