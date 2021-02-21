@@ -3,6 +3,11 @@
 ``exm`` is a Python package that automates the scheduling of UC3M exams. To this
 end, it provides a script with the same name, `exm`.
 
+`exm` enables the arbitrary combination of both /unit/ and /binary/ date and
+time constraints between subjects of the same grade or across different grades.
+It also allows the definition of different *setup* times required for the
+preparation of any exam. The solutions obtained are not only compliant with
+these user-defined constraints but also with current UC3M regulations.
 
 # Requirements #
 
@@ -14,6 +19,9 @@ end, it provides a script with the same name, `exm`.
 * [python-constraint](https://pypi.org/project/python-constraint/) >= 1.4.0
 * [pytz](https://pypi.org/project/pytz/) >= 2020.1
 * [xlsxwriter](https://pypi.org/project/XlsxWriter/) >= 1.3.7
+
+In addition, `exm` has been developed with Python 3.8 and it requires Python 3.6
+at least.
 
 
 # Installation #
@@ -171,6 +179,7 @@ case there is a reason to explicitly use it, it is advised to leave a heading
 blank space, or the spreadsheet might confuse the unit constraint with a
 *formula*.
 
+<a name="binary-constraints"/>
 ### Binary constraints ###
 
 Binary constraints are much alike unit constraints. The same operators are
@@ -226,7 +235,32 @@ which actually satisfies all constraints shown in the preceding Table:
 | Cálculo Integral | 1 | 2 | 2021-05-31 | 18:30:00 |
 | Geometría Lineal | 1 | 2 | 2021-06-01 | 18:30:00 |
 
+## Scheduling across grades ##
 
+The [School of Engineering of UC3M](https://www.uc3m.es/soe/home) provides a
+wide range of Bachelor Degrees. Some are double grades (such as the [Dual
+Bachelor in Computer Science and Engineering and Business
+Administration](https://www.uc3m.es/bachelor-degree/computer-science-business),
+abbreviated as *GII-ADE* in spanish) and others, even if they are not double
+degrees, also share some lectures with other degrees, such as the [Bachelor in
+Applied Mathematics and
+Computing](https://www.uc3m.es/bachelor-degree/applied-mathematics-computing)
+(abbreviated as *GMAC* in spanish) and the [Bachelor in Computer Science and
+Engineering](https://www.uc3m.es/bachelor-degree/computer-science)
+---abbreviated as *GII* in spanish. As an example, the subject *Heuristics and
+Optimization* was originally lectured in GII, but nowadays there also enrolled
+students from both GII-ADE and GMAC.
+
+Thus, to schedule the exam of a specific subject, it is not only necessary to
+take into account the constraints of the grade the subject belongs to, but also
+the constraints involved in the scheduling of the same subject with those of
+other grades. This means that, in our running example, the exam of *Heuristics
+and Optimization* must be scheduled on a date and time that is compatible, not
+only with other exams of GII, but also with the exams of GMAC and GII-ADE.
+
+With this purpose in mind, `exm` allows referencing any record in any sheet (or,
+alternatively in any grade) when setting up a [binary
+constraint](https://github.com/clinaresl/exm/binary-constraint).
 
 # License #
 
