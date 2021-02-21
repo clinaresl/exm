@@ -158,18 +158,18 @@ of constraints ---see examples below.
 
 A unit constraint binds the value of a field (either the date or time of an
 exam) to a constant value (either a date or a time) with the usage of an
-operator. The available operators are: `=`, `!=`, `<`, `<=`, `>` and `>=` with
-have a self-explanatory meaning. For example: `= 28/05/2021` actually fixes the
-date of one subject (also known as *records*), whereas `!= 28/05/2021` just
-forbids one specific date; `< 18:30` serves to pick up any time before 6:30 PM,
-whereas `>= 18:30` necessarily fixes the time of an exam given the timeslots
-defined in the previous example.
+operator. The available operators are: `=`, `!=`, `<`, `<=`, `>` and `>=` with a
+self-explanatory meaning. For example: `= 28/05/2021` actually fixes the date of
+one subject (also known as *records*), whereas `!= 28/05/2021` just forbids one
+specific date; `< 18:30` serves to pick up any time before 6:30 PM, whereas `>=
+18:30` necessarily fixes the time of an exam given the timeslots defined in the
+previous example.
 
-To avoid misleading behavious while operating with the input spreadsheet, the
+To avoid misleading behaviours while operating with the input spreadsheet, the
 operator `=` can be always skipped, e.g., `8:30` is interpreted as `= 8:30`. In
 case there is a reason to explicitly use it, it is advised to leave a heading
 blank space, or the spreadsheet might confuse the unit constraint with a
-/formula/.
+*formula*.
 
 ### Binary constraints ###
 
@@ -178,12 +178,55 @@ available for defining them and `=` is also assumed by default. The difference
 is that instead of providing a constant date or time, they accept a reference to
 another record.
 
-Records are identified by the cell where the name of a subject is given. Thus,
-if one subject (say /Cálculo diferencial/) is given the binary constraint `>
-B13` in the date column, then any feasible solution should allocate this exam a
-date after the exam selected for the record shown in cell B13. Likewise, if `!=
-B10` is given in the time column, then the time chosen for that specific exam
-must be different than the time selected for the subject shown in cell B10.
+Records are identified by the cell where the name of a subject is given, i.e.,
+in the column `Asignatura`. Thus, if one subject (say *Cálculo diferencial*) is
+given the binary constraint `> B13` in the date column, then any feasible
+solution should allocate this exam a date after the exam selected for the record
+shown in cell B13, say *Técnicas de Programación*. Likewise, if `!= B10` is
+given in the time column of one entry, then the time chosen for that specific
+exam must be different than the time selected for the subject shown in cell B10.
+
+### Combination of constraints ###
+
+Either unit or binary constraints can be arbitrarily combined as a
+comma-separated list. 
+
+The following table shows the contents of the sheet `GMAC` in the spreadsheet
+`data/example-2.xlsx`:
+
+| Asignatura | Curso | Cuatrimestre |Fecha | Hora |
+|:----------:|:-----:|:------------:|:----:|:----:|
+|Cálculo diferencial | 1 | 1 | > B13, <B5 | |
+|Fundamentos de Álgebra | 1 |1 | | 15:30 |
+|Programación | 1 | 1 | | |
+| Álgebra Lineal | 1 | 1 | | != B10 |
+| Técnicas de expresión oral y escrita | 1 | 1 | |
+|Habilidades: Humanidades I | 1 | 1 | |
+| Cálculo Integral | 1 | 2 | < B4, >= 2021/05/22 | |
+| Cálculo Vectorial | 1 | 2 | | <= B12 |
+| Geometría Lineal | 1 | 2 | | > B5 |
+| Técnicas de Programación | 1 | 2 | | |
+| Matemática Discreta | 1 | 2 | | |
+
+The contents of the sheet `Timeslots` of this input spreadsheet are identical to
+those shown in the first example. Therefore, the following is a correct schedule
+which actually satisfies all constraints shown in the preceding Table:
+
+| Asignatura | Curso | Cuatrimestre |Fecha | Hora |
+|:----------:|:-----:|:------------:|:----:|:----:|
+| Habilidades: Humanidades I | 1 | 1 | 2021-05-22 | 12:30:00 |
+| Técnicas de expresión oral y escrita | 1 | 1 | 2021-05-24 | 12:30:00 |
+| Programación | 1 | 1 | 2021-05-25 | 12:30:00 |
+| Álgebra Lineal | 1 | 1 | 2021-05-29 | 12:30:00 |
+| Cálculo diferencial | 1 | 1 | 2021-06-03 | 15:30:00 |
+| Fundamentos de Álgebra | 1 | 1 | 2021-06-04 | 15:30:00 |
+| Matemática Discreta | 1 | 2 | 2021-05-26 | 12:30:00 |
+| Técnicas de Programación | 1 | 2 | 2021-05-27 | 12:30:00 |
+| Cálculo Vectorial | 1 | 2 | 2021-05-28 | 12:30:00 |
+| Cálculo Integral | 1 | 2 | 2021-05-31 | 18:30:00 |
+| Geometría Lineal | 1 | 2 | 2021-06-01 | 18:30:00 |
+
+
 
 # License #
 
